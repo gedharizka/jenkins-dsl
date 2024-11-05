@@ -1,0 +1,30 @@
+node('master') {
+  try {
+
+    stage('Checkout SCM') {
+      checkout([
+        $class: "GitSCM", 
+        branches: [[name: "refs/heads/main"]], 
+        extensions: [[$class: 'CloneOption', timeout: 30]], 
+        userRemoteConfigs: [[url: "http://10.0.116.86:8084/digital/devops/bsi-dsl.git", credentialsId: "jenkins-dsl"]]
+      ])
+    }
+
+    stage('Create a Project') {
+      jobDsl targets: [  
+        'src/java-maven-seed.groovy',
+      ].join('\n'),
+      removedJobAction: 'DELETE',
+      removedViewAction: 'DELETE',
+      lookupStrategy: 'SEED_JOB'
+      failFast: true|false
+    }
+  } catch (e) {
+    echo " Should be integrate to teams if failed"
+    throw e
+    updateGitlabCommitStatus name: 'build', state: 'failed'
+  } finally {
+    echo " Should be integrate to teams if success"
+    updateGitlabCommitStatus name: 'build', state: 'success'
+  }
+}
