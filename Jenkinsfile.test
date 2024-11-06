@@ -1,6 +1,6 @@
-pipelineJob('Test/echo-pipeline-job') {
-    displayName('Echo Pipeline Job')
-    description('Pipeline ini hanya menjalankan perintah echo untuk setiap tahap.')
+// pipelineJob('Test/echo-pipeline-job') {
+//     displayName('Echo Pipeline Job')
+//     description('Pipeline ini hanya menjalankan perintah echo untuk setiap tahap.')
 
     pipeline {
         agent any
