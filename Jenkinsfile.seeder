@@ -6,13 +6,13 @@ node('master') {
         $class: "GitSCM", 
         branches: [[name: "refs/heads/main"]], 
         extensions: [[$class: 'CloneOption', timeout: 30]], 
-        userRemoteConfigs: [[url: "http://10.0.116.86:8084/digital/devops/bsi-dsl.git", credentialsId: "jenkins-dsl"]]
+        userRemoteConfigs: [[url: "https://github.com/gedharizka/jenkins-dsl.git", credentialsId: "jenkins-dsl"]]
       ])
     }
 
     stage('Create a Project') {
       jobDsl targets: [  
-        'src/java-maven-seed.groovy',
+        'src/job_java_maven.groovy',
       ].join('\n'),
       removedJobAction: 'DELETE',
       removedViewAction: 'DELETE',
