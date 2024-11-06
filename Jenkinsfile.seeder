@@ -6,7 +6,7 @@ node('master') {
         $class: "GitSCM", 
         branches: [[name: "refs/heads/main"]], 
         extensions: [[$class: 'CloneOption', timeout: 30]], 
-        userRemoteConfigs: [[url: "https://github.com/gedharizka/jenkins-dsl.git", credentialsId: "jenkins-dsl"]]
+        userRemoteConfigs: [[url: "https://github.com/gedharizka/jenkins-dsl.git", credentialsId: "github-secret"]]
       ])
     }
 
