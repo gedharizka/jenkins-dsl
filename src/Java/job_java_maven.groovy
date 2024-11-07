@@ -1,6 +1,6 @@
 import groovy.json.JsonSlurper
 
-def inputFile = readFileFromWorkspace("src/data.json")
+def inputFile = readFileFromWorkspace("../src/data.json")
 def InputJSON = new JsonSlurper().parseText(inputFile)
 def project_env = "JAVA"
 
