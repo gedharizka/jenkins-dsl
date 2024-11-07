@@ -18,7 +18,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
         }        
 
         definition {
-            cps{
+            cpsScript{
                 sandbox()
                 script('''
                      pipeline {
