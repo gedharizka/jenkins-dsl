@@ -14,7 +14,7 @@ node('master') {
       echo "Masuk Create Project"
       jobDsl targets: [  
         'src/Example/job_example.groovy',
-        'src/Java/job_java_maven.groovy',
+        'src/Java/*',
       ].join('\n'),
       removedJobAction: 'DELETE',
       removedViewAction: 'DELETE',
