@@ -1,4 +1,4 @@
-pipelineJob('Simple-Pipeline-Job') {
+pipelineJob('Example-Pipeline-Job') {
     description("This is a simple Jenkins pipeline job created with Job DSL.")
 
     // Mengatur log rotator untuk menjaga hanya 10 build terakhir

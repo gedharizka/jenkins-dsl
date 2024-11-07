@@ -11,14 +11,14 @@ for (i=0; i<InputJSON.project.size(); i++) {
     def num_to_keep = InputJSON.num_to_keep
     def repo_owner_name = InputJSON.repo_owner_name
 
-    pipelineJob(project_env + '/' + project_name) {    
+    pipelineJob("${project_env}" + '/' + "${project_name}") {    
 
         logRotator {    
             numToKeep(num_to_keep)    
         }        
 
         definition {
-            cpsScript{
+            cps{
                 sandbox()
                 script('''
                      pipeline {
