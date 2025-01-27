@@ -15,6 +15,7 @@ node('master') {
       jobDsl targets: [  
         'src/Example/job_example.groovy',
         'src/Java/*',
+        'src/blue_test/*',
       ].join('\n'),
       removedJobAction: 'DELETE',
       removedViewAction: 'DELETE',
