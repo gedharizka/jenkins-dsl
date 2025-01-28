@@ -1,5 +1,5 @@
 folder('Sandbox') {
-    displayName('java-maven')
+    displayName('Sandbox')
     description('Pipeline maven java')
 }
 
