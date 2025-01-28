@@ -23,6 +23,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
             name('BRANCH_OR_TAG')
             type('PT_BRANCH')
             remoteURL(git_url)
+            credentialsId('github-credentials')
             sortMode('DESCENDING')
             selectedValue('TOP')
             listSize('100')
