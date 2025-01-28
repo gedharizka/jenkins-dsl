@@ -54,43 +54,61 @@ for (i=0; i<InputJSON.project.size(); i++) {
             cps{
                 sandbox()
                 script('''
-pipeline {
-    agent any
-    environment{
-        PATH = "/opt/apache-maven-3.9.6/bin:$PATH"
-    }
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code...'
-                def branch = "${params.BRANCH_OR_TAG}"
-                git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch])
-                
-            }
-        }
-        stage('Build') {
-            steps {
-                echo " ===> Build started <==="
-                
-            }
-        }
-        stage('Test') {
-            steps {
-                echo " ===> unit test started <==="
-                
-            }
+
+node(){
+    try {
+        stage("Clone Repository"){
+            echo "Clone"
         }
 
-
-
-    }
-    post {
-        always {
-            echo 'Pipeline complete, cleaning up workspace...'
-            cleanWs()
+        stage("Build"){
+            echo"Build"
         }
+    }catch (Exception e){
+        echo "Error"
+
+    }finally {
+        echo "==== Finaly ===="
     }
 }
+
+// pipeline {
+//     agent any
+//     environment{
+//         PATH = "/opt/apache-maven-3.9.6/bin:$PATH"
+//     }
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 def branch = "${params.BRANCH_OR_TAG}"
+//                 echo 'Checking out code...'
+//                 git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch])
+                
+//             }
+//         }
+//         stage('Build') {
+//             steps {
+//                 echo " ===> Build started <==="
+                
+//             }
+//         }
+//         stage('Test') {
+//             steps {
+//                 echo " ===> unit test started <==="
+                
+//             }
+//         }
+
+
+
+//     }
+//     post {
+//         always {
+//             echo 'Pipeline complete, cleaning up workspace...'
+//             cleanWs()
+//         }
+//     }
+// }
                 ''')
             }
             
