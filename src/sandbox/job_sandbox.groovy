@@ -60,6 +60,11 @@ node(){
         stage("Clone Repository"){
             echo "==== Clone ===="
             def branch = "${params.BRANCH_OR_TAG}"
+            def remove_prefix = "refs/heads/"
+            if (branch.startsWith(remove_prefix)) {
+                branch = branch.substring(remove_prefix.size())
+            }
+            echo "${branch}"
             git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch])
         }
 
