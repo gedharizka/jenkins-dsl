@@ -18,18 +18,18 @@ for (i=0; i<InputJSON.project.size(); i++) {
             // need plugin ---List Git Branches Parameter---
                 // remoteURL(git_url)
            gitParameter {
-                name('BRANCH_OR_TAG')
-                branch('main')
-                branchFilter('origin/*')
-                tagFilter('*')
-                defaultValue('main')
-                description('Select branch or tag')
-                quickFilterEnabled(true)
-                selectedValue('TOP')
-                listSize('10')
-                sortMode('ASCENDING_SMART')
-                type('PT_BRANCH')
-                useRepository('https://github.com/gedharizka/tweet-trend.git')
+                name('BRANCH_OR_TAG') 
+                description('Select a branch or tag to build') 
+                type('PT_BRANCH') 
+                branch('main') 
+                branchFilter('origin/*') 
+                tagFilter('*') 
+                useRepository('https://github.com/gedharizka/tweet-trend.git') 
+                defaultValue('main') 
+                selectedValue('TOP') 
+                quickFilterEnabled(true) 
+                listSize('10') 
+                sortMode('ASCENDING_SMART') 
             }
         }
 
