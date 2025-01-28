@@ -1,6 +1,6 @@
 import groovy.json.JsonSlurper
 
-def inputFile = readFileFromWorkspace("data.json")
+def inputFile = readFileFromWorkspace("blue_test.json")
 def InputJSON = new JsonSlurper().parseText(inputFile)
 def project_env = "Blue-Test"
 def git_url = "https://github.com/gedharizka/tweet-trend.git"
