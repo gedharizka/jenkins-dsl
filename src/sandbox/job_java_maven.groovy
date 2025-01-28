@@ -9,7 +9,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
 
     def project_name = InputJSON.project[i].repository_name
     def repository_name = InputJSON.project[i].repository_name
-    def num_to_keep = InputJSON.num_to_keep
+    def num_to_keep = InputJSON.project[i].num_to_keep
     def repo_owner_name = InputJSON.repo_owner_name
 
     pipelineJob("${project_env}/${project_name}") {    

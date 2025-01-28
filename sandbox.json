@@ -1,8 +1,8 @@
 {
     "repo_credential_id": "jenkins-dsl",
     "repo_owner_name": "gedha rizka",
-    "days_to_keep": 1,
-    "num_to_keep": 1,
+    "days_to_keep": 30,
+    "num_to_keep": 10,
     "project": [
         {
             "name": "Sandbox",
