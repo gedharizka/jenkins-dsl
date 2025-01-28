@@ -20,7 +20,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
            gitParameter {
                 name('BRANCH_OR_TAG')
                 branch('main')
-                branchFilter('.*')
+                branchFilter('origin/*')
                 tagFilter('*')
                 defaultValue('main')
                 description('')
@@ -28,7 +28,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
                 selectedValue('TOP')
                 listSize('10')
                 sortMode('ASCENDING_SMART')
-                type('Branch')
+                type('PT_BRANCH')
                 useRepository(git_url)
             }
         }
