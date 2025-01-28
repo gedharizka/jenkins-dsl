@@ -22,6 +22,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
                 branch('main')
                 branchFilter('origin/*')
                 tagFilter('*')
+                defaultValue('main')
                 description('')
                 quickFilterEnabled(true)
                 selectedValue('TOP')
