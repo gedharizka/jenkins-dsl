@@ -19,6 +19,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
                 // remoteURL(git_url)
            gitParameter {
                 name('BRANCH_OR_TAG')
+                branch('main')
                 branchFilter('.*')
                 tagFilter('*')
                 defaultValue('ref/heads/main')
