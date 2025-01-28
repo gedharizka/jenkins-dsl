@@ -17,15 +17,16 @@ for (i=0; i<InputJSON.project.size(); i++) {
         parameters{
             // need plugin ---List Git Branches Parameter---
            gitParameter {
-                name('BRANCH_OR_TAG'),
-                branchFilter('.*'),
-                defaultValue('main'),
-                description(''),
-                quickFilterEnabled(true),
-                selectedValue('TOP'),
-                sortMode('ASCENDING_SMART'),
-                tagFilter('*'),
+                name('BRANCH_OR_TAG')
+                branchFilter('.*')
                 remoteURL(git_url)
+                tagFilter('*')
+                defaultValue('ref/heads/main')
+                description('')
+                quickFilterEnabled(true)
+                selectedValue('TOP')
+                listSize('10')
+                sortMode('ASCENDING_SMART')
                 type('PT_BRANCH_TAG')
                 credentialsId('github-credential')
             }
