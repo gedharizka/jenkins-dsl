@@ -22,7 +22,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
                 branch('main')
                 branchFilter('.*')
                 tagFilter('*')
-                defaultValue('ref/heads/main')
+                defaultValue('main')
                 description('')
                 quickFilterEnabled(true)
                 selectedValue('TOP')
