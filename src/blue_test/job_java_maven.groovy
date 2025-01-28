@@ -23,13 +23,13 @@ for (i=0; i<InputJSON.project.size(); i++) {
                 branchFilter('origin/*')
                 tagFilter('*')
                 defaultValue('main')
-                description('')
+                description('Select branch or tag')
                 quickFilterEnabled(true)
                 selectedValue('TOP')
                 listSize('10')
                 sortMode('ASCENDING_SMART')
                 type('PT_BRANCH')
-                useRepository(git_url)
+                useRepository('https://github.com/gedharizka/tweet-trend.git')
             }
         }
 
