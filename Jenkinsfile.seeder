@@ -16,6 +16,7 @@ node('master') {
         'src/Example/job_example.groovy',
         'src/Java/*',
         'src/blue_test/*',
+        'src/sandbox/*',
       ].join('\n'),
       removedJobAction: 'DELETE',
       removedViewAction: 'DELETE',

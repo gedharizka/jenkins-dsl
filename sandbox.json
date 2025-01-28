@@ -1,0 +1,14 @@
+{
+    "repo_credential_id": "jenkins-dsl",
+    "repo_owner_name": "gedha rizka",
+    "days_to_keep": 1,
+    "num_to_keep": 1,
+    "project": [
+        {
+            "name": "Sandbox",
+            "repository_name": "tweet-trend",
+            "num_to_keep":"10"
+
+        }
+    ]
+}
