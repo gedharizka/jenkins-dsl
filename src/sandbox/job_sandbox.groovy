@@ -56,8 +56,6 @@ for (i=0; i<InputJSON.project.size(); i++) {
                 script('''
 
 node(){
-    //  PATH = "/opt/apache-maven-3.9.2/bin:$PATH"
-    // PATH="/opt/apache-maven-3.9.4/bin:$PATH"
     try {
         stage("Clone Repository"){
             echo "==== Clone ===="
@@ -71,10 +69,12 @@ node(){
         }
 
         withEnv([
-            PATH="/opt/apache-maven-3.9.4/bin:$PATH"
+            "PATH=/opt/apache-maven-3.9.4/bin:$PATH"
         ]){
             stage("Build"){
+                echo """ ==== mvn === """
                 sh""" mvn --version """
+                sh 'mvn clean deploy -Dmaven.test.skip=true'
             }
         }
 
