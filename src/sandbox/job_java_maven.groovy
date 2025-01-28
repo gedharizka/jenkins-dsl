@@ -63,6 +63,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out code...'
+                def branch = "${params.BRANCH_OR_TAG}"
+                git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch])
                 
             }
         }
