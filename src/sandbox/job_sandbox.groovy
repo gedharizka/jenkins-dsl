@@ -76,11 +76,20 @@ node(){
                 sh""" mvn --version """
                 sh 'mvn clean deploy -Dmaven.test.skip=true'
             }
+
+            stage("Test"){
+                echo " ===> unit test started <==="
+                sh """ mvn surefire-report:report """
+                echo " ===> unit test ended <==="
+            }
+
         }
+
 
         stage("Build"){
             echo"Build"
         }
+
     }catch (Exception e){
         echo "Error"
 
