@@ -27,8 +27,8 @@ for (i=0; i<InputJSON.project.size(); i++) {
                 selectedValue('TOP')
                 listSize('10')
                 sortMode('ASCENDING_SMART')
-                type('PT_BRANCH_TAG')
-                credentialsId('github-credential')
+                type('Branch')
+                useRepository(git_url)
             }
         }
 
