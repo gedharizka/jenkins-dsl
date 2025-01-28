@@ -16,10 +16,10 @@ for (i=0; i<InputJSON.project.size(); i++) {
 
         parameters{
             // need plugin ---List Git Branches Parameter---
+                // remoteURL(git_url)
            gitParameter {
                 name('BRANCH_OR_TAG')
                 branchFilter('.*')
-                remoteURL(git_url)
                 tagFilter('*')
                 defaultValue('ref/heads/main')
                 description('')
