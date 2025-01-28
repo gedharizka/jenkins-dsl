@@ -58,7 +58,9 @@ for (i=0; i<InputJSON.project.size(); i++) {
 node(){
     try {
         stage("Clone Repository"){
-            echo "Clone"
+            echo "==== Clone ===="
+            def branch = "${params.BRANCH_OR_TAG}"
+            git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch])
         }
 
         stage("Build"){
