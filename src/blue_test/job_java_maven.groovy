@@ -47,7 +47,7 @@ for (i=0; i<InputJSON.project.size(); i++) {
         }
 
         logRotator {    
-            numToKeep(${num_to_keep})    
+            numToKeep(num_to_keep)    
         }        
 
         definition {
