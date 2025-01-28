@@ -56,6 +56,8 @@ for (i=0; i<InputJSON.project.size(); i++) {
                 script('''
 
 node(){
+    //  PATH = "/opt/apache-maven-3.9.2/bin:$PATH"
+    // PATH="/opt/apache-maven-3.9.4/bin:$PATH"
     try {
         stage("Clone Repository"){
             echo "==== Clone ===="
@@ -64,8 +66,16 @@ node(){
             if (branch.startsWith(remove_prefix)) {
                 branch = branch.substring(remove_prefix.size())
             }
-            echo "${branch}"
+            echo "===== branch : ${branch} ======"
             git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch])
+        }
+
+        withEnv([
+            PATH="/opt/apache-maven-3.9.4/bin:$PATH"
+        ]){
+            stage("Build"){
+                sh""" mvn --version """
+            }
         }
 
         stage("Build"){
