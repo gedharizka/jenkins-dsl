@@ -85,6 +85,26 @@ node(){
 
         }
 
+        withEnv([
+            sonarScan = tool "sonar-docker"
+        ]){
+            stage("SonarQube Scan"){
+                withSonarQubeEnv('sonar-docker-server'){
+                    withCredentials([string(credentialsId:'sonar-token',variable:'SONAR_TOKEN')]){
+                        sh """
+                             mvn clean verify sonar:sonar \
+                            -Dsonar.projectKey=trend-app \
+                            -Dsonar.projectName=trend-app \
+                            -Dsonar.host.url=http://localhost:9001 \
+                            -Dsonar.login=${SONAR_TOKEN}
+                        """
+                    }
+                }
+            }
+        
+        }
+         
+
 
         stage("Build"){
             echo"Build"
