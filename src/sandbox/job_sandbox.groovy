@@ -114,6 +114,7 @@ node(){
 
         stage("Build"){
             echo"Build"
+            sh """ docker images """
         }
 
     }catch (Exception e){
