@@ -118,6 +118,15 @@ node(){
             sh """ docker image ls"""
         }
 
+        stage("Docker Push"){
+            withCredentials([usernamePassword(credentialsId: 'docker-credential', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]){
+                echo "Logging into Docker Hub..."
+                sh""" docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD} """
+                echo "Pushing Docker image..."
+                sh """ docker push gedharizka/'''+repository_name+''':latest """ 
+            }
+        }
+
         stage("Build"){
             echo"Build"
             sh """ docker images """
@@ -130,44 +139,6 @@ node(){
         echo "==== Finaly ===="
     }
 }
-
-// pipeline {
-//     agent any
-//     environment{
-//         PATH = "/opt/apache-maven-3.9.6/bin:$PATH"
-//     }
-//     stages {
-//         stage('Checkout') {
-//             steps {
-//                 def branch = "${params.BRANCH_OR_TAG}"
-//                 echo 'Checking out code...'
-//                 git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch])
-                
-//             }
-//         }
-//         stage('Build') {
-//             steps {
-//                 echo " ===> Build started <==="
-                
-//             }
-//         }
-//         stage('Test') {
-//             steps {
-//                 echo " ===> unit test started <==="
-                
-//             }
-//         }
-
-
-
-//     }
-//     post {
-//         always {
-//             echo 'Pipeline complete, cleaning up workspace...'
-//             cleanWs()
-//         }
-//     }
-// }
                 ''')
             }
             
