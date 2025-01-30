@@ -112,6 +112,12 @@ node(){
          
 
 
+        stage("Build Docker Images"){
+            echo"======> Build Images <======>"
+            sh """ docker build -t gedharizka/'''+repository_name+''':latest ."""
+            sh """ docker image ls"""
+        }
+
         stage("Build"){
             echo"Build"
             sh """ docker images """
