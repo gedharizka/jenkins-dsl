@@ -88,7 +88,7 @@ node(){
                     withCredentials([string(credentialsId:'sonar-token',variable:'SONAR_TOKEN')]){
                         sh """
                             mvn clean verify sonar:sonar \
-                            -Dsonar.projectKey=trend-app \
+                            -Dsonar.projectKey=tweet-trend \
                             -Dsonar.projectName=tweet-trend \
                             -Dsonar.host.url=http://localhost:9001 \
                             -Dsonar.login=${SONAR_TOKEN}
