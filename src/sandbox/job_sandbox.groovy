@@ -86,22 +86,21 @@ node(){
         }
 
         withEnv([
-            sonarScan = tool "sonar-docker"
+            "PATH=/opt/apache-maven-3.9.6/bin:$PATH"
         ]){
             stage("SonarQube Scan"){
-                withSonarQubeEnv('sonar-docker-server'){
-                    withCredentials([string(credentialsId:'sonar-token',variable:'SONAR_TOKEN')]){
-                        sh """
-                             mvn clean verify sonar:sonar \
-                            -Dsonar.projectKey=trend-app \
-                            -Dsonar.projectName=trend-app \
-                            -Dsonar.host.url=http://localhost:9001 \
-                            -Dsonar.login=${SONAR_TOKEN}
-                        """
+                    withSonarQubeEnv('sonar-docker-server'){
+                        withCredentials([string(credentialsId:'sonar-token',variable:'SONAR_TOKEN')]){
+                            sh """
+                                mvn clean verify sonar:sonar \
+                                -Dsonar.projectKey=tweet-trend \
+                                -Dsonar.projectName=tweet-trend \
+                                -Dsonar.host.url=http://localhost:9001 \
+                                -Dsonar.login=${SONAR_TOKEN}
+                            """
                     }
                 }
             }
-        
         }
          
 
