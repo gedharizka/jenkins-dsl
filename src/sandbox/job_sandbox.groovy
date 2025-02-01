@@ -110,7 +110,7 @@ node(){
         }
 
         stage("Build Docker Images"){
-            echo"======> Build Images <======>"
+            echo"======> Build Images <======"
             sh """ docker build -t gedharizka/'''+repository_name+''':latest ."""
             sh """ docker image ls"""
         }
@@ -120,6 +120,15 @@ node(){
             sh """ trivy --format template --template '@.templates/html.tpl' -o trivy-report.html gedharizka/'''+repository_name+''':latest ."""
             sh """ Scann COMPLETE"""
         }
+
+        stage("Generate Report"){
+            echo"======> Generate Report <======"
+            sh """ curl -o trivy-html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl """
+            sh """  trivy image --format template --template @trivy-html.tpl -o trivy-report.html gedharizka/tweet-trend:latest """
+            sh """ Scann COMPLETE"""
+        }
+
+
 
         stage("Docker Push"){
             withCredentials([usernamePassword(credentialsId: 'docker-credential', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]){
