@@ -113,6 +113,7 @@ node(){
             echo"======> Build Images <======"
             sh """ docker build -t gedharizka/'''+repository_name+''':latest ."""
             sh """ docker image ls"""
+            sh """ trivy image gedharizka/'''+repository_name+''':latest"""
         }
 
         stage("Scan image by Trivy"){
