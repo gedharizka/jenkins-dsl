@@ -109,13 +109,16 @@ node(){
 
         }
 
-         
-
-
         stage("Build Docker Images"){
             echo"======> Build Images <======>"
             sh """ docker build -t gedharizka/'''+repository_name+''':latest ."""
             sh """ docker image ls"""
+        }
+
+        stage("Scan image by Trivy"){
+            echo"======> SCAN IMAGE <======>"
+            sh """ trivy --format template --template '@.templates/html.tpl' -o trivy-report.html gedharizka/'''+repository_name+''':latest ."""
+            sh """ Scann COMPLETE"""
         }
 
         stage("Docker Push"){
