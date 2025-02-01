@@ -121,15 +121,6 @@ node(){
             sh """ Scann COMPLETE"""
         }
 
-        stage("Generate Report"){
-            echo"======> Generate Report <======"
-            sh """ curl -o trivy-html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl """
-            sh """  trivy image --format template --template @trivy-html.tpl -o trivy-report.html gedharizka/tweet-trend:latest """
-            sh """ Scann COMPLETE"""
-        }
-
-
-
         stage("Docker Push"){
             withCredentials([usernamePassword(credentialsId: 'docker-credential', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]){
                 echo "Logging into Docker Hub..."
