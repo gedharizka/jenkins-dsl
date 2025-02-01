@@ -117,8 +117,8 @@ node(){
 
         stage("Scan image by Trivy"){
             echo"======> SCAN IMAGE <======>"
-            sh """ curl -o trivy-html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl """
-            sh """ trivy --format template --template '@.templates/html.tpl' -o trivy-report.html gedharizka/'''+repository_name+''':latest ."""
+            // sh """ curl -o trivy-html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl """
+            sh """ trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o trivy-report.html gedharizka/'''+repository_name+''':latest """
             sh """ Scann COMPLETE"""
         }
 
