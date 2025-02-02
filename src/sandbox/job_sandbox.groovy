@@ -140,7 +140,7 @@ node(){
             }
         }
 
-        stage("Build"){
+        stage("Deploy Kubernetes"){
             echo"Build"
             sh """ docker images """
         }
