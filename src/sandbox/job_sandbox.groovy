@@ -113,14 +113,14 @@ node(){
             echo"======> Build Images <======"
             sh """ docker build -t gedharizka/'''+repository_name+''':latest ."""
             sh """ docker image ls"""
-            sh """ trivy image gedharizka/'''+repository_name+''':latest"""
+            // sh """ trivy image gedharizka/'''+repository_name+''':latest"""
         }
 
         stage("Scan image by Trivy"){
             echo"======> SCAN IMAGE <======>"
             // sh """ curl -o trivy-html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl """
             sh """ trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o trivy-report.html gedharizka/'''+repository_name+''':latest """
-            sh """ Scann COMPLETE"""
+            echo """ *** Scann COMPLETE *** """
         }
 
         stage("Docker Push"){
