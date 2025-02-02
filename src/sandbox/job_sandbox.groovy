@@ -154,6 +154,7 @@ node(){
             // Deploy aplikasi ke namespace demo
             sh """ kubectl apply -f deployment.yaml -n demo """
             sh """ kubectl apply -f service.yaml -n demo """
+            sh """ kubectl apply -f ingress.yaml -n demo """
             sh """ kubectl get pods -n demo -o wide """
         }
 
