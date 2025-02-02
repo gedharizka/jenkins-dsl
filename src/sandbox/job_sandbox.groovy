@@ -140,9 +140,21 @@ node(){
             }
         }
 
+         stage("Clone Kubernetes Manifest") {
+            echo "Cloning Kubernetes manifests..."
+            git([url: 'https://github.com/gedharizka/manifest-tweet-trend.git', branch: 'main'])
+        }
+
         stage("Deploy Kubernetes"){
-            echo"Build"
-            sh """ docker images """
+             echo "Deploying to Kubernetes in namespace demo..."
+                
+            // Pastikan namespace `demo` ada sebelum apply
+            sh """ kubectl create namespace demo --dry-run=client -o yaml | kubectl apply -f - """
+
+            // Deploy aplikasi ke namespace demo
+            sh """ kubectl apply -f deployment.yaml -n demo """
+            sh """ kubectl apply -f service.yaml -n demo """
+            sh """ kubectl get pods -n demo -o wide """
         }
 
     }catch (Exception e){
