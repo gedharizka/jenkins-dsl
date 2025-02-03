@@ -143,6 +143,7 @@ node(){
          stage("Clone Kubernetes Manifest") {
             echo "Cloning Kubernetes manifests..."
             git([url: 'https://github.com/gedharizka/manifest-tweet-trend.git', branch: 'main'])
+            sh """ docker image rm gedharizka/'''+repository_name+''':latest """ 
         }
 
         stage("Deploy Kubernetes"){
