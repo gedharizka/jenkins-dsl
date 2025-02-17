@@ -150,12 +150,16 @@ pipeline {
             }
         }
 
-        
+        stage('Get Manifest ') {
+            steps {       
+                git([url: 'https://github.com/gedharizka/manifest-tweet-trend.git', branch: "aku-laku", credentialsId: 'github-credential'])
+            }
+        }
 
         stage('Deploy to Kubernetes ') {
             steps {       
                    sh """
-                        if ! kubectl get namespace my-namespace >/dev/null 2>&1; then
+                        if ! kubectl get namespace '''+repository_name+''' >/dev/null 2>&1; then
                             echo "Namespace tidak ditemukan, membuat namespace..."
                             kubectl create namespace '''+ repository_name +'''
                         else
