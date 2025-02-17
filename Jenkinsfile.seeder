@@ -17,6 +17,7 @@ node() {
         'src/Java/*',
         'src/blue_test/*',
         'src/sandbox/*',
+        'src/aku_laku/*',
       ].join('\n'),
       removedJobAction: 'DELETE',
       removedViewAction: 'DELETE',
