@@ -1,8 +1,8 @@
 import groovy.json.JsonSlurper
 
 def inputFile = readFileFromWorkspace("aku_laku.json")
-def InputJSON = new JsonSlurper().parseText(inputFile)
 def project_env = "Aku-Laku"
+def InputJSON = new JsonSlurper().parseText(inputFile)
 def git_url = "https://github.com/gedharizka/tweet-trend.git"
 
 for (i=0; i<InputJSON.project.size(); i++) {
@@ -54,133 +54,115 @@ for (i=0; i<InputJSON.project.size(); i++) {
             cps{
                 sandbox()
                 script('''
-pipeline {
-    agent any
-    environment{
-        PATH = "/opt/apache-maven-3.9.6/bin:$PATH"
-    }
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code...'
-                def branch = "${params.BRANCH_OR_TAG}"
-                git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch, credentialsId: 'github-credential'])
+node(){
+    try {
+        stage("Clone Repository"){
+            echo "==== Clone ===="
+            def branch = "${params.BRANCH_OR_TAG}"
+            def remove_prefix = "refs/heads/"
+            if (branch.startsWith(remove_prefix)) {
+                branch = branch.substring(remove_prefix.size())
             }
+            echo "===== branch : ${branch} ======"
+            git([url: 'https://github.com/gedharizka/tweet-trend.git', branch: branch])
         }
-        stage('Build') {
-            steps {
-                echo " ===> Build started <==="
+
+        withEnv([
+            "PATH=/opt/apache-maven-3.9.6/bin:$PATH"
+        ]){
+            stage("Build"){
+                echo """ ==== mvn === """
+                sh""" mvn --version """
                 sh 'mvn clean deploy -Dmaven.test.skip=true'
-                echo " ===> Build end <==="
             }
-        }
-        stage('Test') {
-            steps {
+
+            stage("Test"){
                 echo " ===> unit test started <==="
                 sh """ mvn surefire-report:report """
                 echo " ===> unit test ended <==="
             }
-        }
-        stage('SonarQube Scan') {
-            environment{
-                sonarScan = tool 'sonar-scanncer';
-            }
-            steps {
-                withSonarQubeEnv('sonar-scanner-server'){
-                    withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]){
+
+            stage("SonarQube Scan"){
+                withSonarQubeEnv('sonar-docker-server'){
+                    withCredentials([string(credentialsId:'sonar-token',variable:'SONAR_TOKEN')]){
                         sh """
                             mvn clean verify sonar:sonar \
-                            -Dsonar.projectKey=trend-app \
-                            -Dsonar.projectName=trend-app \
-                            -Dsonar.host.url=http://178.128.84.214:9002 \
+                            -Dsonar.projectKey=tweet-trend \
+                            -Dsonar.projectName=tweet-trend \
+                            -Dsonar.host.url=http://localhost:9001 \
                             -Dsonar.login=${SONAR_TOKEN}
                         """
                     }
                 }
+            }
 
-            }// end step
-        }
-
-        stage('Quality Gate') {
-            steps {
+            stage('Quality Gate') {
                 timeout(time: 5, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
                     def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
                     if (qg.status != 'OK') {
                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
                     }   
                 }
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                echo " ===> docker build <==="
-                sh """ docker build -t gedharizka/'''+repository_name+''':latest . """
-                sh """ docker image ls"""
-
-                echo " ===> end docker build <==="
-            }
-        }
-
-        stage('Image Scan by trivy') {
-            steps {       
                 
-                def trivyOutput = sh(script: """ trivy image gedharizka/'''+repository_name+''':latest  """, returnStdout: true).trim()
+            }
 
-                println trivyOutput
+        }
 
-                if (trivyOutput.contains("Total: 0")) {
-                    echo "No vulnerabilities found in the Docker image."
-                } else {
-                    echo "Vulnerabilities found in the Docker image."
+        stage("Build Docker Images"){
+            echo"======> Build Images <======"
+            sh """ docker build -t gedharizka/'''+repository_name+''':latest ."""
+            sh """ docker image ls"""
+            // sh """ trivy image gedharizka/'''+repository_name+''':latest"""
+        }
 
-                }
+        stage("Scan image by Trivy"){
+            echo"======> SCAN IMAGE <======>"
+            // sh """ curl -o trivy-html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl """
+            sh """ trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o trivy-report.html gedharizka/'''+repository_name+''':latest """
+            echo """ *** Scann COMPLETE *** """
+            publishHTML(target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: ".",
+                reportFiles: "trivy-report.html",
+                reportName: "Trivy Security Report"
+            ])
+        }
 
+        stage("Docker Push"){
+            withCredentials([usernamePassword(credentialsId: 'docker-credential', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]){
+                echo "Logging into Docker Hub..."
+                sh""" docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD} """
+                echo "Pushing Docker image..."
+                sh """ docker push gedharizka/'''+repository_name+''':latest """ 
             }
         }
 
-        stage('Docker Push ') {
-            steps {       
-                withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                    sh """ docker login -u ${dockerHubUser} -p ${dockerHubPassword} """
-                    sh """ docker push gedharizka/'''+repository_name+''':latest """
-
-                }
-
-            }
+         stage("Clone Kubernetes Manifest") {
+            echo "Cloning Kubernetes manifests..."
+            git([url: 'https://github.com/gedharizka/manifest-tweet-trend.git', branch: 'aku-laku'])
+            sh """ docker image rm gedharizka/'''+repository_name+''':latest """ 
         }
 
-        stage('Get Manifest ') {
-            steps {       
-                git([url: 'https://github.com/gedharizka/manifest-tweet-trend.git', branch: "aku-laku", credentialsId: 'github-credential'])
-            }
+        stage("Deploy Kubernetes"){
+             echo "Deploying to Kubernetes in namespace demo..."
+                
+            // Pastikan namespace `demo` ada sebelum apply
+            sh """ kubectl create namespace demo --dry-run=client -o yaml | kubectl apply -f - """
+
+            // Deploy aplikasi ke namespace demo
+            sh """ kubectl apply -f deployment.yaml -n demo """
+            sh """ kubectl apply -f service.yaml -n demo """
+            sh """ kubectl apply -f ingress.yaml -n demo """
+            sh """ kubectl get pods -n demo -o wide """
         }
 
-        stage('Deploy to Kubernetes ') {
-            steps {       
-                   sh """
-                        if ! kubectl get namespace '''+repository_name+''' >/dev/null 2>&1; then
-                            echo "Namespace tidak ditemukan, membuat namespace..."
-                            kubectl create namespace '''+ repository_name +'''
-                        else
-                            echo "Namespace sudah ada, melanjutkan..."
-                        fi
-                    """
-                sh """ kubectl apply -f deployment --namespace='''+ repository_name +''' """
-                sh """ kubectl apply -f secret  --namespace='''+ repository_name +''' """
-                sh """ kubectl apply -f service --namespace='''+ repository_name +''' """
+    }catch (Exception e){
+        echo "Error"
 
-            }
-        }
-
-
-
-    }
-    post {
-        always {
-            echo 'Pipeline complete, cleaning up workspace...'
-            cleanWs()
-        }
+    }finally {
+        echo "==== Finaly ===="
     }
 }
                 ''')
