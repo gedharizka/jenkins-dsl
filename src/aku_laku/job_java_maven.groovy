@@ -7,6 +7,7 @@ def git_url = "https://github.com/gedharizka/tweet-trend.git"
 
 for (i=0; i<InputJSON.project.size(); i++) {
 
+    def ns_project = InputJSON.project[i].name
     def project_name = InputJSON.project[i].repository_name
     def repository_name = InputJSON.project[i].repository_name
     def num_to_keep = InputJSON.num_to_keep
@@ -149,13 +150,20 @@ node(){
              echo "Deploying to Kubernetes in namespace demo..."
                 
             // Pastikan namespace `demo` ada sebelum apply
-            sh """ kubectl create namespace demo --dry-run=client -o yaml | kubectl apply -f - """
+            sh """ 
+                if ! kubectl get namespace '''+ns_project+''' >/dev/null 2>&1; then
+                        echo "Namespace tidak ditemukan, membuat namespace..."
+                        kubectl create namespace '''+ns_project+'''
+                    else
+                        echo "Namespace sudah ada, melanjutkan..."
+                fi
+            """
 
             // Deploy aplikasi ke namespace demo
-            sh """ kubectl apply -f deployment.yaml -n demo """
-            sh """ kubectl apply -f service.yaml -n demo """
-            sh """ kubectl apply -f ingress.yaml -n demo """
-            sh """ kubectl get pods -n demo -o wide """
+            sh """ kubectl apply -f deployment.yaml -n '''+ns_project+''' """
+            sh """ kubectl apply -f service.yaml -n '''+ns_project+''' """
+            sh """ kubectl apply -f ingress.yaml -n '''+ns_project+''' """
+            sh """ kubectl get pods -n '''+ns_project+''' -o wide """
         }
 
     }catch (Exception e){
