@@ -55,19 +55,19 @@ node(){
         stage("Build Docker Images"){
             echo"======> Build Images <======"
             sh """ cd code"""
-            sh """ docker build -t gedharizka/'''+repository_name+''':latest ."""
+            sh """ docker build -t gedharizka/'''+repository_name+''':latest ./code """
             sh """ docker image ls"""
-            // sh """ trivy image gedharizka/'''+repository_name+''':latest"""
+
         }
 
-        // stage("Docker Push"){
-        //     withCredentials([usernamePassword(credentialsId: 'docker-credential', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]){
-        //         echo "Logging into Docker Hub..."
-        //         sh""" docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD} """
-        //         echo "Pushing Docker image..."
-        //         sh """ docker push gedharizka/'''+repository_name+''':latest """ 
-        //     }
-        // }
+        stage("Docker Push"){
+            withCredentials([usernamePassword(credentialsId: 'docker-credential', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]){
+                echo "Logging into Docker Hub..."
+                sh""" docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD} """
+                echo "Pushing Docker image..."
+                sh """ docker push gedharizka/'''+repository_name+''':latest """ 
+            }
+        }
 
         // stage("Deploy Kubernetes"){
         //      echo "Deploying to Kubernetes in namespace demo..."
