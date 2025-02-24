@@ -71,7 +71,7 @@ node(){
 
         stage("Deploy Kubernetes"){
 
-            sh """ kubectl apply -f ./manifests/application.yaml """
+            sh """ kubectl apply -f manifests/application.yaml """
             sh """ kubectl rollout status deployment/do-sample-app  """
 
         }
