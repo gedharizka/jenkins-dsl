@@ -69,25 +69,12 @@ node(){
             }
         }
 
-        // stage("Deploy Kubernetes"){
-        //      echo "Deploying to Kubernetes in namespace demo..."
-                
-        //     // Pastikan namespace `demo` ada sebelum apply
-        //     sh """ 
-        //         if ! kubectl get namespace '''+ns_project+''' >/dev/null 2>&1; then
-        //                 echo "Namespace tidak ditemukan, membuat namespace..."
-        //                 kubectl create namespace '''+ns_project+'''
-        //             else
-        //                 echo "Namespace sudah ada, melanjutkan..."
-        //         fi
-        //     """
+        stage("Deploy Kubernetes"){
 
-        //     // Deploy aplikasi ke namespace demo
-        //     sh """ kubectl apply -f deployment.yaml -n '''+ns_project+''' """
-        //     sh """ kubectl apply -f service.yaml -n '''+ns_project+''' """
-        //     sh """ kubectl apply -f ingress.yaml -n '''+ns_project+''' """
-        //     sh """ kubectl get pods -n '''+ns_project+''' -o wide """
-        // }
+            sh """ kubectl apply -f manifests/aplication.yaml """
+            sh """ kubectl rollout status deployment/do-sample-app  """
+
+        }
 
     }catch (Exception e){
         echo "Error"
